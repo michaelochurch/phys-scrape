@@ -101,6 +101,9 @@ Design and measured results: `docs/superpowers/specs/2026-09-05-scipost-error-ca
 | `data/error_cards_skipped.jsonl` | 10 | Papers whose sources could not be read, with the reason. |
 | `data/scipost_candidates.jsonl` | 538 | The selected review rounds, before card construction. |
 
+Five worked examples with links, referee quotes, source diffs and a
+verification protocol: [`sample_errors_5.md`](sample_errors_5.md).
+
 The two card files join on `card_id`. A gold or queued record is
 self-contained — it carries the referee's words, the cited equation, and the
 LaTeX that changed — so a physicist can adjudicate a card without opening
