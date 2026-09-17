@@ -20,12 +20,13 @@ LEVELS = ROOT / "data" / "paper_levels.jsonl"
 CANDIDATES = ROOT / "data" / "scipost_candidates.jsonl"
 
 MEANINGS = {
-    1: "high school / early undergraduate",
-    2: "late undergraduate / early graduate",
-    3: "late graduate school",
-    4: "professor / specialist",
-    5: "elite specialist",
+    1: "accessible to most or all graduate students",
+    2: "accessible to some students and most specialists",
+    3: "accessible to many specialists",
+    4: "accessible only to elite specialists",
 }
+# The bands are quartiles of this corpus, so they should stay near even.
+QUARTILE_TOLERANCE = 0.03
 
 
 def levels() -> list[dict]:
@@ -44,7 +45,7 @@ def test_each_paper_is_labelled_exactly_once():
 
 @pytest.mark.parametrize("field", [
     "arxiv_id", "title", "paper_level", "paper_level_meaning", "level_basis",
-    "assigned_by", "assigned_on", "axis", "human_reviewed",
+    "assigned_by", "assigned_on", "axis", "scale", "human_reviewed",
 ])
 def test_every_record_carries_the_field(field):
     assert all(field in r for r in levels())
@@ -58,6 +59,19 @@ def test_levels_are_in_range_and_match_their_stated_meaning():
 
 def test_every_label_records_a_basis():
     assert all(r["level_basis"].strip() for r in levels())
+
+
+def test_the_bands_are_quartiles():
+    rows = levels()
+    for level in MEANINGS:
+        share = sum(1 for r in rows if r["paper_level"] == level) / len(rows)
+        assert abs(share - 0.25) <= QUARTILE_TOLERANCE, f"level {level} holds {share:.1%}"
+
+
+def test_the_scale_is_recorded_as_relative_not_absolute():
+    # "accessible to most graduate students" means the most accessible quarter
+    # of this corpus, which is not the same as easy.
+    assert all("quartile" in r["scale"] for r in levels())
 
 
 def test_provenance_marks_the_labels_as_model_assigned_and_unreviewed():
