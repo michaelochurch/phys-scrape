@@ -1,0 +1,10 @@
+{"paper": 7, "level": 3, "gold_eq": "1",
+ "gold": "in Eq (1), m|phi|^2 should be replaced by m^2|phi|^2",
+ "verdict": "TIMEOUT",
+ "claim": "no report produced in either attempt",
+ "attempts": [
+   "attempt 1: uncapped prompt, terminated by the 64k output-token ceiling before delivering a report",
+   "attempt 2: 1200-word capped prompt, killed at 40m 16s with no output streamed (transcript stayed at 154 bytes from launch)"],
+ "scored": false,
+ "diagnosis": "paper 7 is the only manuscript in the set whose central claims are not re-derivable. 77k chars but only 12 display equations (1.6 per 10k chars, against 4-40 for the papers that matched) and 875 inline math spans. Its results are numerical conformal-bootstrap bounds - semidefinite-program output that cannot be reproduced without running the solver. Every successful agent worked by computing something; this paper offers almost nothing to compute against.",
+ "irony": "the gold sits in Eq (1) on the first page and is a dimensional slip (m|phi|^2 vs m^2|phi|^2) - by every other result in this run, the easiest class of error in the set"}

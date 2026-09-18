@@ -1,0 +1,47 @@
+{
+ "run_date": "2026-09-17",
+ "setup": "one agent per paper, each given only its own manuscript at a neutral path, told to read nothing else and not to search; never told a known answer existed or how many errors to expect",
+ "model": "default subagent model for this session",
+ "scored": 11,
+ "match": 6,
+ "partial": 1,
+ "miss": 4,
+ "timeout": 1,
+ "headline": "6/11 found the gold error unaided; 7/11 counting the partial",
+ "by_level": {
+  "1": {
+   "match": 2,
+   "of": 3
+  },
+  "2": {
+   "match": 2,
+   "of": 3
+  },
+  "3": {
+   "match": 1,
+   "of": 2
+  },
+  "4": {
+   "match": 1,
+   "of": 3
+  }
+ },
+ "by_error_type": {
+  "no_convention_defence": {
+   "match": 6,
+   "partial": 1,
+   "of": 7
+  },
+  "defensible_as_convention_or_intent": {
+   "match": 0,
+   "of": 4
+  }
+ },
+ "unscored_other_findings": 57,
+ "leakage_check": "no report showed signs of having read the gold; several argued against the referee's stated fix",
+ "caveats": [
+  "papers 7 and 9 ran under a prompt with a 1200-word report cap after both crashed on the 64k output ceiling; paper 9's match came under that prompt",
+  "paper 7 timed out twice and is excluded from the denominator",
+  "no error here has been verified by a qualified human; every card still carries human_severity_label unreviewed"
+ ]
+}
