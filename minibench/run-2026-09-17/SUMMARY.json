@@ -1,7 +1,7 @@
 {
  "run_date": "2026-09-17",
  "setup": "one agent per paper, each given only its own manuscript at a neutral path, told to read nothing else and not to search; never told a known answer existed or how many errors to expect",
- "model": "default subagent model for this session",
+ "model": "claude-opus-5 (Opus 5), no per-agent override, effort level xhigh; verified from the session subagent transcripts, not from memory",
  "scored": 11,
  "match": 6,
  "partial": 1,
