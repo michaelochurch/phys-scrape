@@ -7,7 +7,7 @@
  "partial": 1,
  "miss": 4,
  "timeout": 1,
- "headline": "6/11 found the gold error unaided; 7/11 counting the partial",
+ "headline": "5/10 found the gold error unaided under the identical prompt; 6/11 as originally scored, before paper 9's hinted rerun was set aside",
  "by_level": {
   "1": {
    "match": 2,
@@ -18,8 +18,9 @@
    "of": 3
   },
   "3": {
-   "match": 1,
-   "of": 2
+   "match": 0,
+   "of": 1,
+   "note": "7 timed out, 9 hinted; only the partial remains"
   },
   "4": {
    "match": 1,
@@ -28,9 +29,10 @@
  },
  "by_error_type": {
   "no_convention_defence": {
-   "match": 6,
+   "match": 5,
    "partial": 1,
-   "of": 7
+   "of": 6,
+   "note": "paper 9 also belonged here; hinted, so excluded"
   },
   "defensible_as_convention_or_intent": {
    "match": 0,
@@ -40,8 +42,20 @@
  "unscored_other_findings": 57,
  "leakage_check": "no report showed signs of having read the gold; several argued against the referee's stated fix",
  "caveats": [
-  "papers 7 and 9 ran under a prompt with a 1200-word report cap after both crashed on the 64k output ceiling; paper 9's match came under that prompt",
-  "paper 7 timed out twice and is excluded from the denominator",
-  "no error here has been verified by a qualified human; every card still carries human_severity_label unreviewed"
- ]
+  "papers 7 and 9 were relaunched after crashing on the 64k output ceiling; both rerun prompts added a clause naming the class of that paper's own gold error (dimensions for 7, coefficients for 9). Paper 9's MATCH came under that prompt and is excluded from the clean count. See prompts/referee-agent-reruns.md",
+  "paper 7 timed out twice and is excluded from every denominator",
+  "no error here has been verified by a qualified human; every card still carries human_severity_label unreviewed",
+  "all agents were the same model, so this run measures papers and error types, not model capability"
+ ],
+ "clean": {
+  "scored": 10,
+  "match": 5,
+  "partial": 1,
+  "miss": 4,
+  "excluded": {
+   "07": "timed out twice",
+   "09": "rerun prompt named the class of its own gold error"
+  }
+ },
+ "prompts": "prompts/referee-agent.md (canonical), prompts/referee-agent-reruns.md (the two variants and the disclosure)"
 }

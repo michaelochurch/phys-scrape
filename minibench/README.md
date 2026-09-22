@@ -10,6 +10,14 @@ report and the authors then changed in the next arXiv revision.
 | `answers.jsonl` | The gold errors, with referee quote, DOI and the fix | never the candidate |
 | `JUDGE.md` | Grading protocol with the gold errors inlined | the judge |
 | `selection.txt` | The twelve arXiv ids, for rebuilding | — |
+| `run-2026-09-17/` | First run: per-paper verdicts and `SUMMARY.json` | — |
+
+The prompt sent to the twelve agents in that first run is kept verbatim in
+[`../prompts/referee-agent.md`](../prompts/referee-agent.md). Read
+[`../prompts/referee-agent-reruns.md`](../prompts/referee-agent-reruns.md)
+before citing the run's score: two agents were relaunched under a prompt that
+named the class of their own gold error, and the clean count is 5 of 10, not
+6 of 11.
 
 ## Running it
 
