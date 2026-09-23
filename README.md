@@ -110,6 +110,32 @@ LaTeX that changed — so a physicist can adjudicate a card without opening
 anything else. Both queues are sorted: `rank` 1 is the strongest evidence,
 `rank_signals` says why.
 
+### The 12-paper benchmark, and the prompts behind it
+
+[`minibench/`](minibench/) holds twelve papers, three at each difficulty band,
+each carrying exactly one referee-reported error: the manuscripts
+(`papers.txt`), the gold answers (`answers.jsonl`), a judge protocol
+(`JUDGE.md`), and the results of the first run (`run-2026-09-17/`).
+
+**[`prompts/`](prompts/) holds the exact instruction every agent received**,
+verbatim from the session transcript. Read it before quoting any score from
+this repository — a benchmark number means nothing without the prompt that
+produced it.
+
+| File | Sent to |
+| --- | --- |
+| [`prompts/referee-agent.md`](prompts/referee-agent.md) | the 12 benchmark agents; identical except for the manuscript path |
+| [`prompts/referee-agent-reruns.md`](prompts/referee-agent-reruns.md) | 2 relaunches after output-ceiling crashes — **and the disclosure that both carried a hint** |
+| [`prompts/code-review-agent.md`](prompts/code-review-agent.md) | the pre-merge reviewer |
+
+The reruns are why this directory exists. Both relaunched prompts added a
+clause naming the class of that paper's own gold error, which was not noticed
+until the prompts were written down and diffed. One of the two scored a match
+under the hint, so **the clean result is 5 of 10, not the 6 of 11 first
+reported.** The details are in `prompts/referee-agent-reruns.md`.
+
+Project state, and what is on disk but not in git: [`HANDOFF.md`](HANDOFF.md).
+
 ### Two rules that matter
 
 **Selection is deterministic.** No model decides which papers enter the
