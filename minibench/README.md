@@ -33,9 +33,19 @@ numbers. Difficulty runs 3 papers per level in order, so papers 1-3 are level
 
 ## What is removed from the papers
 
-Titles, authors, affiliations, abstracts, acknowledgements, bibliographies,
-arXiv identifiers, and arXiv numbers used as citation keys. Verified: zero
-titles and zero identifiers survive.
+Titles, authors, affiliations, e-mail addresses, abstracts, acknowledgements,
+bibliographies, arXiv identifiers, and arXiv numbers used as citation keys.
+Verified: zero titles, zero identifiers and zero e-mail addresses survive.
+
+Two idioms defeated the first version of this and were found only by grepping
+the built file for `@`: jheppub's `\emailAdd{}`, which the `\email` rule did
+not match, and a title block typeset by hand inside `flushleft` rather than
+with `\author`, which no command-based rule can see. Both are now covered, and
+`tests/test_minibench.py` holds a case for each.
+
+**Citation keys still carry surnames.** `\cite{Jacobsen06}` names a cited
+author, not one of the paper's own, and stripping every key would break the
+`\cite` commands throughout. They stay.
 
 **This is not real anonymity.** A physics paper is identified by its content;
 anyone who searches a distinctive phrase will find it, and with it the

@@ -27,7 +27,14 @@ from jsonl_io import read_jsonl, write_jsonl
 
 
 ARXIV = re.compile(r"ar[XxΧ]iv[.:\s]*\d{4}\.\d{4,5}(v\d+)?|\barXiv\b|\d{4}\.\d{4,5}v\d+", re.I)
-STRIP_COMMANDS = ("title", "author", "date", "thanks", "affiliation", "institute", "email", "address")
+# Journal classes spell these a dozen ways: jheppub writes \emailAdd, Elsevier
+# \ead, Springer \institute. A name missed here puts an author identity into
+# the file the model is given.
+STRIP_COMMANDS = (
+    "title", "titlerunning", "author", "authorrunning", "date", "thanks",
+    "affiliation", "altaffiliation", "affil", "institute", "institution",
+    "emailAdd", "email", "ead", "address", "abstract", "keywords", "pacs",
+)
 ACK = re.compile(
     r"\\(?:section|subsection|paragraph|section\*|subsection\*)\s*\{[^}]*"
     r"(?:acknowledg|funding|competing interest)[^}]*\}.*?(?=\\(?:section|subsection|appendix|begin\{thebibliography\})|\Z)",
@@ -41,6 +48,17 @@ DOC_START = re.compile(r"\\begin\{document\}")
 FIRST_SECTION = re.compile(r"\\(?:section|chapter|part)\b\*?\s*\{")
 NUMBERED_MATH = re.compile(r"\\begin\{(?:equation|align|gather|multline|eqnarray)\}")
 PDF_META = re.compile(r"pdf(?:title|author|subject|keywords)\s*=\s*\{[^{}]*\}", re.I)
+EMAIL = re.compile(r"[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}")
+ABSTRACT_ENV = re.compile(r"\\begin\{abstract\}.*?\\end\{abstract\}", re.S)
+# Some authors typeset the title block by hand instead of using \author, so
+# there is no command to strip -- only a centred or flush-left box sitting
+# ahead of the physics with names, affiliations and addresses in it.
+TITLE_BLOCK_ENV = re.compile(r"\\begin\{(flushleft|flushright|center|titlepage)\}.*?\\end\{\1\}", re.S)
+IDENTIFYING = re.compile(
+    r"[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}|E-?mail|\$\^\{?\d"
+    r"|Universit|Institut|Department|Laborator|Academy|College|School of",
+    re.I,
+)
 CITE_KEY_ID = re.compile(r"(?<=[{,])\s*\d{4}\.\d{4,5}(v\d+)?\s*(?=[,}])")
 
 HEADER = """\
@@ -84,6 +102,26 @@ def cut_front_matter(text: str) -> str:
     return text[:start.end()] + "\n\n" + text[section.start():]
 
 
+def cut_title_blocks(text: str) -> str:
+    """Drop a hand-typeset title block: a box of names and affiliations.
+
+    Only boxes standing ahead of the first numbered equation are considered,
+    and only those carrying an identifying mark -- an address, an e-mail, a
+    superscript affiliation key. A box holding a numbered equation is physics
+    and is kept whatever else it contains.
+    """
+    first_equation = NUMBERED_MATH.search(text)
+    limit = first_equation.start() if first_equation else len(text)
+    for block in reversed(list(TITLE_BLOCK_ENV.finditer(text))):
+        if block.start() >= limit:
+            continue
+        body = block.group(0)
+        if NUMBERED_MATH.search(body) or not IDENTIFYING.search(body):
+            continue
+        text = text[:block.start()] + text[block.end():]
+    return text
+
+
 def scrub_title(text: str, title: str) -> str:
     """Remove the title wherever it appears, tolerating LaTeX whitespace."""
     words = [re.escape(w) for w in title.split() if w]
@@ -99,6 +137,8 @@ def anonymise(source: str, title: str | None = None) -> str:
     text = ACK.sub("", text)
     text = PDF_META.sub("", text)
     text = cut_front_matter(text)
+    text = cut_title_blocks(text)
+    text = ABSTRACT_ENV.sub("", text)
     text = CITE_KEY_ID.sub("REF", text)
     if title:
         text = scrub_title(text, title)
@@ -106,6 +146,7 @@ def anonymise(source: str, title: str | None = None) -> str:
         text = re.sub(r"\\" + command + r"\s*(\[[^\]]*\])?\s*\{", r"\\REMOVED" + "{", text)
         text = _drop_braced(text, r"\REMOVED{")
     text = ARXIV.sub("", text)
+    text = EMAIL.sub("", text)
     return re.sub(r"\n{4,}", "\n\n\n", text).strip()
 
 

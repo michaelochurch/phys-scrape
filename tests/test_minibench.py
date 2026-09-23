@@ -165,3 +165,90 @@ def test_scrubbing_a_title_is_case_insensitive_and_space_tolerant():
 def test_no_title_given_leaves_the_text_alone():
     body = r"\section{X}" + "\nordinary prose"
     assert "ordinary prose" in mb.anonymise(body)
+
+
+# Two real leaks found in the committed benchmark file: a jheppub preamble
+# using \emailAdd, and a SciPost-style author block typeset by hand inside
+# flushleft. Both put author identities into the file a model is given.
+
+JHEP_STYLE = r"""
+\documentclass{article}
+\usepackage{jheppub}
+\emailAdd{simone.blasi@mpi-hd.mpg.de}
+\emailAdd{csaki@cornell.edu}
+\abstract{We present a novel realization of a composite Higgs.}
+\begin{document}
+\section{Introduction}
+The mass obeys
+\begin{equation}
+m = g v
+\end{equation}
+\end{document}
+"""
+
+HAND_TYPESET_AUTHORS = r"""
+\documentclass{article}
+\begin{document}
+\section*{}
+\begin{flushleft}
+  {\bfseries Jesper Lykke Jacobsen$^{1,2}$, Sylvain Ribault$^1$}
+  {\textit{
+      $^1$ Institut de physique théorique, CEA, CNRS
+      \\ $^2$ New York University Abu Dhabi, United Arab Emirates
+    }}
+  {\textit{E-mail:} \texttt{
+      jesper.jacobsen@ens.fr,
+      sylvain.ribault@ipht.fr
+    }}
+\end{flushleft}
+\section{Introduction}
+The four-point function satisfies
+\begin{equation}
+Z = \sum_i q^{h_i}
+\end{equation}
+\end{document}
+"""
+
+
+def test_email_addresses_never_survive_whatever_command_carries_them():
+    out = mb.anonymise(JHEP_STYLE)
+    assert "@" not in out
+    assert "mpi-hd" not in out
+    assert "cornell" not in out
+
+
+def test_a_preamble_abstract_is_removed():
+    out = mb.anonymise(JHEP_STYLE)
+    assert "composite Higgs" not in out
+
+
+def test_a_hand_typeset_author_block_is_cut():
+    out = mb.anonymise(HAND_TYPESET_AUTHORS)
+    assert "Jacobsen" not in out
+    assert "Ribault" not in out
+    assert "Abu Dhabi" not in out
+    assert "@" not in out
+
+
+def test_cutting_the_author_block_leaves_the_physics():
+    out = mb.anonymise(HAND_TYPESET_AUTHORS)
+    assert r"Z = \sum_i q^{h_i}" in out
+    assert "four-point function" in out
+
+
+CENTRED_PHYSICS = r"""
+\documentclass{article}
+\begin{document}
+\section{Results}
+\begin{center}
+\begin{equation}
+\chi = \frac{1}{T}
+\end{equation}
+\end{center}
+\end{document}
+"""
+
+
+def test_a_centred_block_holding_an_equation_is_kept():
+    out = mb.anonymise(CENTRED_PHYSICS)
+    assert r"\chi = \frac{1}{T}" in out

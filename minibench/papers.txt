@@ -3769,23 +3769,6 @@ neural-network based integration methods.
 \def\com#1{{\bf \small \color{black}[#1]}}
 
 
-\emailAdd{simone.blasi@mpi-hd.mpg.de}
-\emailAdd{csaki@cornell.edu}
-\emailAdd{fgoertz@mpi-hd.mpg.de}
-
-
-\abstract{We present a novel realization of a composite Higgs, 
-which can naturally produce top partners above the current LHC bounds 
-without increasing the tuning above 10\%. The essential ingredients 
-are softened breaking of the Higgs shift symmetry as well as maximal
-symmetry, which turn out to perfectly complement each other. 
-The 5D realization of this model is particularly simple: 
-universal UV and IR boundary conditions for the bulk fermions 
-containing the SM fields will cure the problems of existing 
-holographic composite Higgs models and provide a complete 
-viable model for a naturally light Higgs without much tuning. }
-
-
 \begin{document}
 
 \section{Introduction}
@@ -12192,44 +12175,7 @@ States with complex rapidities (strings) under periodic boundary conditions rema
 \begin{document}
 
 \section*{}
-\begin{flushleft}
-  {\bfseries\sffamily\Large 
-    
-    \vspace{1.5cm}
-    \\
-    \hrule height .6mm
-  }
-  \vspace{1.5cm}
 
-  {\bfseries\sffamily 
-    Jesper Lykke Jacobsen$^{1,2,3}$, Rongvoram Nivesvivat$^4$, Sylvain Ribault$^1$, Paul Roux$^{1,2}$
-  }
-  \vspace{4mm}
-
-  {\textit{\noindent
-      \\ \vspace{2mm}
-      $^1$
-      Institut de physique théorique, CEA, CNRS, 
-      Université Paris-Saclay
-      % \\ $^2$ Laboratoire de Physique de l'École Normale Supérieure, ENS, Université PSL, CNRS, Sorbonne Université, Université Paris Cité, F-75005 Paris, France
-      \\ 
-      $^2$ Laboratoire de Physique de l’École Normale Supérieure, ENS, Université PSL, CNRS, Sorbonne Université, Université Paris Cité, F-75005 Paris, France
-      \\
-      $^3$ Sorbonne Université, École Normale Supérieure, CNRS,
-      Laboratoire de Physique
-      \\
-      $^4$ New York University Abu Dhabi, United Arab Emirates
-    }}
-
-  \vspace{4mm}
-
-  {\textit{E-mail:} \texttt{
-      jesper.jacobsen@ens.fr,
-      rongvoramnivesvivat@gmail.com,
-      sylvain.ribault@ipht.fr,
-      paul.roux@phys.ens.fr
-    }}
-\end{flushleft}
 \vspace{7mm}
 
 
