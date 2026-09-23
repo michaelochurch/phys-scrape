@@ -35,9 +35,10 @@ python audit_latex_pairs.py --input data/candidates_sources.jsonl \
 
 Sources ground truth from public peer review: a referee states what is wrong
 and where, and the following revision shows the fix. 8,844 submissions yield
-**538 candidates carrying 995 referee objection quotes** over 1,128 distinct
-cited locations, each with a report DOI. 237 of those are localized to the
-exact equation; the remaining 891 go to a human queue.
+**537 review rounds over 513 distinct papers, carrying 990 referee objection
+quotes** and 1,215 cited locations, each quote with a report DOI. Card
+construction turns those into 1,119 cards: 236 localized to the exact
+equation, 883 sent to a human queue.
 
 ```bash
 ./rebuild.sh
@@ -95,11 +96,11 @@ Design and measured results: `docs/superpowers/specs/2026-09-05-scipost-error-ca
 
 | File | Rows | What it is |
 | --- | ---: | --- |
-| `data/error_cards.jsonl` | 237 | Benchmark cards. A manuscript excerpt and a task. **The only file a model may see.** |
-| `data/error_cards_gold.jsonl` | 237 | The answers: referee quote, report DOI, cited equation, the revision pair and its diff, rank and the signals behind it. |
-| `data/error_cards_unresolved.jsonl` | 891 | Cards a human must localize. Same evidence, plus the candidate hunks, minus the excerpt. |
+| `data/error_cards.jsonl` | 236 | Benchmark cards. A manuscript excerpt and a task. **The only file a model may see.** |
+| `data/error_cards_gold.jsonl` | 236 | The answers: referee quote, report DOI, cited equation, the revision pair and its diff, rank and the signals behind it. |
+| `data/error_cards_unresolved.jsonl` | 883 | Cards a human must localize. Same evidence, plus the candidate hunks, minus the excerpt. |
 | `data/error_cards_skipped.jsonl` | 10 | Papers whose sources could not be read, with the reason. |
-| `data/scipost_candidates.jsonl` | 538 | The selected review rounds, before card construction. |
+| `data/scipost_candidates.jsonl` | 537 | The selected review rounds, before card construction. |
 
 Five worked examples with links, referee quotes, source diffs and a
 verification protocol: [`sample_errors_5.md`](sample_errors_5.md).
@@ -163,7 +164,7 @@ an expert; it does not certify that the flaw is fatal.
 
 ```bash
 python -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest tests/ -q      # 168 tests
+.venv/bin/python -m pytest tests/ -q      # 205 tests
 ```
 
 
