@@ -127,13 +127,15 @@ produced it.
 | --- | --- |
 | [`prompts/referee-agent.md`](prompts/referee-agent.md) | the 12 benchmark agents; identical except for the manuscript path |
 | [`prompts/referee-agent-reruns.md`](prompts/referee-agent-reruns.md) | 2 relaunches after output-ceiling crashes — **and the disclosure that both carried a hint** |
+| [`prompts/referee-agent-clean-rerun.md`](prompts/referee-agent-clean-rerun.md) | the 2026-09-24 re-test that settled the hint |
 | [`prompts/code-review-agent.md`](prompts/code-review-agent.md) | the pre-merge reviewer |
 
 The reruns are why this directory exists. Both relaunched prompts added a
 clause naming the class of that paper's own gold error, which was not noticed
-until the prompts were written down and diffed. One of the two scored a match
-under the hint, so **the clean result is 5 of 10, not the 6 of 11 first
-reported.** The details are in `prompts/referee-agent-reruns.md`.
+until the prompts were written down and diffed. One of the two had scored a
+match, so it was set aside — then re-run under a prompt naming no error class,
+where it matched again and was restored. **The result is 6 of 11**; the audit
+trail is in `prompts/referee-agent-reruns.md`.
 
 Project state, and what is on disk but not in git: [`HANDOFF.md`](HANDOFF.md).
 

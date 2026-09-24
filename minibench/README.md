@@ -13,11 +13,14 @@ report and the authors then changed in the next arXiv revision.
 | `run-2026-09-17/` | First run: per-paper verdicts and `SUMMARY.json` | — |
 
 The prompt sent to the twelve agents in that first run is kept verbatim in
-[`../prompts/referee-agent.md`](../prompts/referee-agent.md). Read
+[`../prompts/referee-agent.md`](../prompts/referee-agent.md). The score is
+**6 of 11** — one paper has never completed a run and is excluded.
+
+Two of the twelve agents were relaunched under a prompt that named the class
+of their own gold error;
 [`../prompts/referee-agent-reruns.md`](../prompts/referee-agent-reruns.md)
-before citing the run's score: two agents were relaunched under a prompt that
-named the class of their own gold error, and the clean count is 5 of 10, not
-6 of 11.
+records that, and the 2026-09-24 re-run that showed the hint did not change
+the outcome.
 
 ## Running it
 

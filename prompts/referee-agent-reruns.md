@@ -19,21 +19,31 @@ That is a steer toward the answer. Paper 7 timed out again, so it cost
 nothing there. **Paper 9 scored MATCH under the hinted prompt**, and that
 MATCH cannot be credited to an unaided model.
 
-### Effect on the headline
+### Tested, 2026-09-24: the hint did not carry the result
 
-| | Reported | Clean |
-|---|---|---|
-| Scored papers | 11 | 10 (paper 9 also set aside) |
-| MATCH | 6 | **5** |
-| PARTIAL | 1 | 1 |
-| MISS | 4 | 4 |
+Paper 9 was re-run with a fresh agent under the canonical prompt plus the
+length cap and **no error-class clause**. It matched again, at high
+confidence, and argued the error from gauge invariance rather than asserting
+it:
 
-So: **5 of 10 under the identical unhinted prompt**, not 6 of 11. The
-qualitative finding is unchanged — errors with no convention defence went 5
-match + 1 partial of 6, errors defensible as convention or intent went 0 of 4
-— and paper 9 belonged to the no-defence group either way. The difficulty-band
-breakdown was already too thin to carry weight and is now thinner: level 3
-has one cleanly-scored paper left.
+> `e^{2i\oint a + Ni\int B^3}` — the preceding sentence defines this as the
+> N-th power `e^{Ni\oint a}`, and gauge invariance requires it. The exponent
+> should be N, not 2.
+
+So paper 9 stays in the count, and the headline is **6 of 11** — where it
+started. See [`referee-agent-clean-rerun.md`](referee-agent-clean-rerun.md)
+for the prompt and `minibench/run-2026-09-24/09.json` for the verdict.
+
+Between finding the contamination and testing it, this file reported 5 of 10.
+That was the right reading of the evidence available then: a match under a
+prompt naming the error's class is not evidence of unaided performance, and
+nothing short of a clean run could separate the two. The episode's result is
+not that the number changed — it is that the contamination existed, was
+found by writing the prompts down, and was shown not to matter.
+
+**Paper 7 is still unresolved.** Two attempts hit the 64k output ceiling and a
+third stalled without producing a report. It has never been scored and is
+excluded from every denominator.
 
 ### How this got missed
 

@@ -111,19 +111,19 @@ referee-reported error.
     selection.txt     why these 12
     run-2026-09-17/   first run: 12 result JSONs + SUMMARY.json
 
-**First run result: 5 of 10 agents found the gold error under the identical
-unhinted prompt**, 6 of 10 counting one partial. Originally scored 6 of 11;
-paper 7 timed out twice, and paper 9's MATCH is set aside because its rerun
-prompt named the class of its own gold error (see `prompts/`).
+**Result: 6 of 11 agents found the gold error unaided**, 7 of 11 counting one
+partial. Paper 7 is excluded — it has never completed a run. Paper 9 was
+briefly excluded too, because its relaunch prompt named the class of its own
+gold error; a clean re-run on 2026-09-24 matched again, so it is back in. See
+`prompts/referee-agent-clean-rerun.md`.
 
 Two findings from it that should shape what comes next:
 
-1. **Difficulty band predicted nothing** (L1 2/3, L2 2/3, L4 1/3; level 3 has
-   one cleanly-scored paper left and carries no weight). What did predict:
-   whether the error admits a *convention defence*. Errors with no escape
-   route — a divergent sum, a negative occupation number, a dimensional
-   mismatch — went 5 match + 1 partial of 6. Errors defensible as convention
-   or intent went 0 of 4. That distinction is not a field in the
+1. **Difficulty band predicted nothing** (L1 2/3, L2 2/3, L3 1/2, L4 1/3).
+   What did predict: whether the error admits a *convention defence*. Errors
+   with no escape route — a divergent sum, a negative occupation number, a
+   dimensional mismatch — went 6 match + 1 partial of 7. Errors defensible as
+   convention or intent went 0 of 4. That distinction is not a field in the
    schema, and it probably should be.
 
 2. **57 unscored other findings**, median 5 per paper, on papers known to
@@ -137,8 +137,8 @@ Run conditions, verified from the session transcripts rather than memory:
 agents in that session logged the same model. Papers 7 and 9 ran a different
 prompt after both crashed on the 64k output ceiling: a 1,200-word report cap
 *and* — not noticed until the prompts were diffed — a clause naming the class
-of that paper's own gold error. That is why paper 9 is excluded. Treat 5/10 as
-near a ceiling for a single unaided pass, not a typical score, and not a statement
+of that paper's own gold error. Paper 9 was re-run clean on 2026-09-24 and
+matched again; paper 7 has still never completed. Treat 6/11 as near a ceiling for a single unaided pass, not a typical score, and not a statement
 about models in general — every agent was the same model.
 
 ## 7. Open items
@@ -153,11 +153,16 @@ about models in general — every agent was the same model.
   with web access can verify each one independently.
 - Mike's commits are authored `mchurch8@gatech.edu`; registering that address
   on his GitHub account will link them to his profile.
+- **Paper 7 has never been scored.** Four attempts, three of which generated
+  past the 64k output ceiling before producing a report -- including one under
+  an explicit 1,200-word cap, so the instruction does not bound the generation
+  that precedes the report. An earlier note here blamed equation sparsity;
+  that does not survive measurement (paper 7 sits at 2.1 numbered-math
+  environments per 10k characters, and paper 1 is lower at 1.8 and matched).
+  The failure is reproducible; the explanation is not established.
 - Offered, not started: a `convention_defence` field on the cards (§6.1); a
-  cheap filter for structurally untestable papers (the timeout paper has 1.6
-  display equations per 10k characters and reports solver output, so a good
-  gold error in it is still an unusable card); a model comparison over the
-  frozen 12.
+  model comparison over the frozen 12; a filter for papers that cannot be
+  scored at all, once someone works out what actually characterises them.
 
 ## 8. Map of the code
 
