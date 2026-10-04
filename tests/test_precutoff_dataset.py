@@ -117,3 +117,19 @@ def test_the_readme_does_not_tell_a_reader_to_serve_the_gold_file():
     block = re.search(r"### Serving the cards\n(.*?)\n### ", doc, re.S)
     assert block, "serving section missing"
     assert "error_cards_gold" not in block.group(1)
+
+
+def test_the_readme_accounts_for_every_queued_card():
+    """The README breaks the queue down by why each card could not be served.
+    If the build shifts those counts, the prose goes stale silently -- so the
+    numbers in the table are checked against the file."""
+    import collections
+    queued = read("error_cards_unresolved.jsonl")
+    counts = collections.Counter(c["location_confidence"] for c in queued)
+    doc = (DATASET / "README.md").read_text()
+    section = doc[doc.index("## The 549 queued cards"):doc.index("## Limits")]
+    for reason, n in counts.items():
+        row = re.search(rf"`{reason}`\s*\|\s*(\d+)\s*\|", section)
+        assert row, f"{reason} missing from the README table"
+        assert int(row.group(1)) == n, f"{reason}: README says {row.group(1)}, file has {n}"
+    assert sum(counts.values()) == len(queued)

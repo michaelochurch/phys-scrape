@@ -171,6 +171,54 @@ that implies it).
 Fields: Condensed Matter Theory 141, Quantum Physics 102, HEP-Theory 99,
 Mathematical Physics 60, Statistical and Soft Matter 48, HEP-Phenomenology 33.
 
+## The 549 queued cards: hard to locate, not vague
+
+Every one of the 549 cites a specific place — 497 name an equation. Vague
+objections ("the paper is confusing") never reach this stage; the selection
+rules require a cited location. These failed the *next* step: matching the
+referee's cited location to a hunk the authors actually changed.
+
+| Why it is queued | n | What it means |
+| --- | ---: | --- |
+| `unresolved` | 350 | The referee cites "(3.24)", the authors made several edits, and counting LaTeX equation numbers cannot say which hunk is 3.24. A localization failure on our side, not a problem with the complaint. |
+| `corroborated_near` | 130 | A changed hunk sits 1-3 ordinals from the cited equation but not at it. The excerpt might not contain the error, so serving it would measure our aim rather than the model. |
+| `unsupported_location_kind` | 52 | The referee points at a section or theorem, not an equation — 47 sections, 3 propositions, 1 theorem, 1 lemma. An equation diff cannot anchor these. |
+| `contradicted_symbols` | 15 | The referee quoted a compound symbol that is absent from the hunk we would otherwise anchor to. The two signals disagree, so neither is trusted. |
+| `no_source_change` | 2 | The authors changed nothing at the cited location. Either the referee was mistaken, or they rebutted it. |
+
+By tier: 183 `stated_error`, 366 `corrective_request`. The queue covers 260
+papers, 206 of which have no served card at all.
+
+**The 350 are ordinary concrete errors that our counting could not place.**
+A real example:
+
+> "The reason is that to obtain (3.24), they used the same methodology as in
+> (3.8), but I believe equation (3.8) is wrong."
+
+That is as specific as physics gets. It is queued because the revision touched
+three hunks and we could not prove which one is (3.8).
+
+**The 52 section-level cards are a different problem, and often conceptual.**
+A section pointer usually means a claim in prose rather than a slip in
+algebra:
+
+> "At the beginning of section 1.4: technically, in the context of GR it is
+> wrong to speak about 'force of gravity'."
+
+Better localization will never fix those. They need a card format that quotes
+a passage instead of an equation — a design question, not a backlog item.
+
+**Headroom.** The 130 `near` and 350 `unresolved` are ~480 concrete errors
+needing a human to confirm one location each, with the referee's quote and the
+candidate hunks already in the record. That is the cheapest way to grow this
+dataset by several times, and it needs a physicist rather than more code.
+
+**Known noise.** One of the 549 is a typography complaint the tier rules
+mis-read as a stated error — *"Printing error in the paragraph after Eq.(8):
+`generalize` should be replaced by `generalized`."* A regex sweep for
+typo/wording language finds 1 of 549 queued and **0 of 143 served**, so the
+served set looks clean on that axis. That is an estimate, not an audit.
+
 ## Limits, stated plainly
 
 **No error here has been verified by a physicist.** Every card ships

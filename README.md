@@ -124,7 +124,7 @@ themselves.
 | Review rounds | 320 over 300 distinct papers |
 | Referee objections | 618 |
 | Cards anchored to an exact equation | **143, over 94 papers** |
-| Cards queued for a human | 549 |
+| Cards queued for a human | 549 — specific locations that could not be anchored, [broken down here](data/precutoff/README.md#the-549-queued-cards-hard-to-locate-not-vague) |
 | Report dates | 2016-07-28 .. 2022-11-23 |
 | Cards violating the cutoff | **0**, asserted by `tests/test_precutoff_dataset.py` |
 
