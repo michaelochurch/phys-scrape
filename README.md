@@ -135,8 +135,45 @@ manuscript here is pre-cutoff too.
 Each card carries `report_date`, `report_doi`, `referee_invited` and
 `referee_signed`, so the human-authorship claim is checkable from the data
 rather than from this file. 686 of 692 cards come from journal-invited
-referees; 80 are signed by a named referee. Full method, provenance breakdown
-and limits: [`data/precutoff/README.md`](data/precutoff/README.md).
+referees; 80 are signed by a named referee.
+
+#### Running it as a benchmark
+
+Serve `data/precutoff/error_cards.jsonl` and nothing else. Each line has four
+fields — `card_id`, `task`, `excerpt_lines`, `excerpt` — and the answers live
+in a separate file joined on `card_id`, an opaque digest that says nothing
+about the paper or the error.
+
+```python
+import json
+
+cards = [json.loads(l) for l in open("data/precutoff/error_cards.jsonl")]
+
+def prompt(card):
+    return (
+        f"{card['task']}\n\n"
+        f"The excerpt is LaTeX source, lines {card['excerpt_lines'][0]}"
+        f"-{card['excerpt_lines'][1]} of the manuscript.\n"
+        f"Do not search the web.\n\n"
+        f"{card['excerpt']}"
+    )
+```
+
+Score by joining the model's answer to `error_cards_gold.jsonl` on `card_id`
+and comparing against `referee_quote` and `anchor_hunk` — **not** against
+`cited_location.number`. LaTeX source carries no printed equation numbers, so
+a model will name the error by content, not by the number the referee used.
+The judge protocol in [`minibench/JUDGE.md`](minibench/JUDGE.md) handles this
+and transfers unchanged.
+
+Three things to know before quoting a score: the 143 cards cover 94 papers, so
+26 papers contribute more than one and the cards are not independent;
+`error_cards.jsonl` is deliberately *not* in rank order, because position in a
+ranked file would itself signal evidence strength; and the 549 unresolved
+cards are a reviewer queue, not benchmark material — they carry no excerpt.
+
+Full method, worked scoring example, provenance breakdown and limits:
+[`data/precutoff/README.md`](data/precutoff/README.md).
 
 ```bash
 ./rebuild.sh --precutoff

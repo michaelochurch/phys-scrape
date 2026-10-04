@@ -9,6 +9,7 @@ rather than remembered by whoever next edits it.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -91,3 +92,28 @@ def test_the_model_facing_file_carries_only_the_four_public_fields():
     assert {frozenset(c) for c in served} == {
         frozenset({"card_id", "excerpt_lines", "excerpt", "task"})
     }
+
+
+# --- the documented way in has to work --------------------------------------
+# A README whose snippet does not run is worse than no README. This extracts
+# the serving snippet from the dataset's own docs and executes it.
+
+def test_the_readme_serving_snippet_runs():
+    import re
+    doc = (DATASET / "README.md").read_text()
+    block = re.search(r"```python\nimport json\n\ncards = .*?```", doc, re.S)
+    assert block, "the dataset README no longer carries a serving snippet"
+    namespace: dict = {}
+    exec(block.group(0)[len("```python\n"):-len("```")], namespace)  # noqa: S102
+    cards, prompt = namespace["cards"], namespace["prompt"]
+    assert len(cards) == len(read("error_cards.jsonl"))
+    text = prompt(cards[0])
+    assert cards[0]["excerpt"] in text
+    assert "Do not search the web." in text
+
+
+def test_the_readme_does_not_tell_a_reader_to_serve_the_gold_file():
+    doc = (DATASET / "README.md").read_text()
+    block = re.search(r"### Serving the cards\n(.*?)\n### ", doc, re.S)
+    assert block, "serving section missing"
+    assert "error_cards_gold" not in block.group(1)
