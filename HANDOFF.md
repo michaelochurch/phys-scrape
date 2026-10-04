@@ -48,6 +48,30 @@ method and the numbers. Short version: ORB's physics content is the same
 SciPost corpus a year staler; the rest are computer science, machine
 learning, biology and grant review. Don't redo this survey.
 
+## 3a. The pre-cutoff dataset
+
+`data/precutoff/` holds the same pipeline restricted to referee reports
+submitted before **2022-11-30**, ChatGPT's public release. The point is that
+the ground truth cannot have been model-assisted, so a benchmark built on it
+is not grading models against their own output.
+
+The filter is on the **report** date, not the paper's — a 2021 paper can be
+refereed in 2024, and that report is not pre-cutoff text. Because a report
+always postdates its submission, every reviewed manuscript in the set is
+pre-cutoff as well.
+
+`tests/test_precutoff_dataset.py` reads the committed files and fails the
+suite if any card carries a report dated on or after the cutoff. Do not weaken
+those tests to make a build pass; the property is the dataset.
+
+Each card carries `report_date`, `report_doi`, `referee_invited`,
+`referee_signed`. 686 of 692 are from invited referees; the 6 Contributed
+Reports are held in the human queue and never served.
+
+Rebuild with `./rebuild.sh --precutoff`. The dataset is closed: no report
+written after 2022-11-29 can ever enter it, so a later rebuild reproduces
+these counts apart from records SciPost stops serving.
+
 ## 4. Current state
 
 Branch `fix-retrieval-encoding-bugs`, 31 commits, clean tree, 205 tests
@@ -65,6 +89,7 @@ Pipeline output, all committed:
 | → 883 queued for a human | `data/error_cards_unresolved.jsonl` |
 | → 10 unreadable sources | `data/error_cards_skipped.jsonl` |
 | 513 papers difficulty-labelled | `data/paper_levels.jsonl`, 4 bands |
+| **pre-2022-11-30 dataset** | `data/precutoff/` — 143 anchored cards over 94 papers, 549 queued, 0 cutoff violations |
 
 The 236 served cards are those where the referee's cited location could be
 corroborated against the actual source diff: 203 `corroborated_exact`, 23

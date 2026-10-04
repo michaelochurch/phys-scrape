@@ -111,6 +111,37 @@ LaTeX that changed — so a physicist can adjudicate a card without opening
 anything else. Both queues are sorted: `rank` 1 is the strongest evidence,
 `rank_signals` says why.
 
+### Pre-cutoff dataset: human ground truth by construction
+
+[`data/precutoff/`](data/precutoff/) restricts the same rules to referee
+reports **submitted before 2022-11-30**, the day ChatGPT became public. No
+report in it can have been written with help from a widely available chat
+model, so a benchmark built on it is not quietly grading models against
+themselves.
+
+| | |
+| --- | --- |
+| Review rounds | 320 over 300 distinct papers |
+| Referee objections | 618 |
+| Cards anchored to an exact equation | **143, over 94 papers** |
+| Cards queued for a human | 549 |
+| Report dates | 2016-07-28 .. 2022-11-23 |
+| Cards violating the cutoff | **0**, asserted by `tests/test_precutoff_dataset.py` |
+
+The filter is on the **report** date, not the paper's — a 2021 paper can be
+refereed in 2024. A report always postdates its submission, so every reviewed
+manuscript here is pre-cutoff too.
+
+Each card carries `report_date`, `report_doi`, `referee_invited` and
+`referee_signed`, so the human-authorship claim is checkable from the data
+rather than from this file. 686 of 692 cards come from journal-invited
+referees; 80 are signed by a named referee. Full method, provenance breakdown
+and limits: [`data/precutoff/README.md`](data/precutoff/README.md).
+
+```bash
+./rebuild.sh --precutoff
+```
+
 ### The 12-paper benchmark, and the prompts behind it
 
 [`minibench/`](minibench/) holds twelve papers, three at each difficulty band,
