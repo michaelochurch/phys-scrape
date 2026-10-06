@@ -219,6 +219,82 @@ mis-read as a stated error — *"Printing error in the paragraph after Eq.(8):
 typo/wording language finds 1 of 549 queued and **0 of 143 served**, so the
 served set looks clean on that axis. That is an estimate, not an audit.
 
+## Edit-scope annotation (advisory, machine-generated)
+
+`annotations_edit_scope.jsonl` labels each of the 143 served cards on two
+observable axes. It is **not** a severity label, and it does not touch
+`human_severity_label`.
+
+| What the referee asked for | n |
+| --- | ---: |
+| `correction` — something is wrong | 121 |
+| `presentational` — define, explain, reformat | 21 |
+| `typographical` — spelling, capitalisation | 1 |
+
+| What the authors' recorded edit touched | n |
+| --- | ---: |
+| `bounded_symbolic` — a sign, factor, exponent, index, prime, coefficient | 75 |
+| `expression_rewritten` — the expression substantially reworked | 28 |
+| `derivation_restructured` — steps or argument added or reorganised | 20 |
+| `typesetting_only` — `\label`, `\nonumber`, spacing | 9 |
+| `punctuation_only` — a comma, a full stop | 7 |
+| `no_edit_recorded` — the hunk holds no token change | 4 |
+
+Grouped the way the question is usually asked: **16 minor/presentational, 75
+bounded symbolic corrections, 48 structural or conceptual rewrites, 4 where the
+anchor caught nothing.**
+
+### Why this is not a severity label
+
+**Size does not track severity, and this corpus proves it.** Three of the
+smallest edits here are a spurious factor `g` deleted, `>` turned into `=`, and
+`m|phi|^2` corrected to `m^2|phi|^2`. Each is one or two tokens. None is a
+typo, and the third is a dimensional error on the first page of its paper.
+**49 of 143 edits change a sign or a relational operator** — 18 of them inside
+`bounded_symbolic`, the smallest symbolic class.
+
+Whether a flaw propagates into a paper's conclusions needs the physics
+re-derived against the published result. Nothing in a card supports that, so
+the annotation describes *what was changed*, never *how much it matters*.
+
+### Why the two axes are kept apart
+
+Collapsing them hides a data-quality signal. **12 cards have a referee asking
+for a correction and a recorded edit that cannot be one** — a comma, a
+`\label`, or nothing at all. The anchor found a real changed hunk at the right
+equation, but not the authors' actual fix. `anchor_answers_the_complaint` is
+false on those 12; treat them as weaker evidence than their
+`location_confidence` suggests.
+
+### How reliable is it
+
+Rules only, no model in the loop, and every rule traces to a case found by
+hand-auditing output. Three earlier versions were **refuted** by that auditing:
+
+| Failure | Cause |
+| --- | --- |
+| "remove the erroneous factor $g$" read as prose | a regex for mathematics does not fire on a bare letter |
+| a minus-sign fix read as punctuation | `-` was in the punctuation class |
+| `\beta` -> `\gamma` read as prose | character-level diffing split it into `bet` -> `gamm` |
+| `\label{eq:overlap}` read as symbolic | the fragment `eq` is short enough to look like a variable |
+| a missing brace pair read as punctuation | braces were in the punctuation class |
+| a substantive fix read as typographical | "should read X" is a correction as often as a typo |
+
+Each is now a test in `tests/test_edit_scope.py`. On a final 15-card sample
+drawn after those fixes, `edit_scope` agreed with hand reading on 15 of 15 and
+`complaint_kind` on 13 of 15 — the two misses being presentational requests
+phrased in ways no pattern catches. About 60 of the 143 have been read by hand
+across all iterations. **Call it reliable to roughly 90-95% on edit scope and
+less than that on complaint kind, measured on samples, not audited in full.**
+
+Rebuild with:
+
+```bash
+.venv/bin/python annotate_edit_scope.py \
+    --gold data/precutoff/error_cards_gold.jsonl \
+    --output data/precutoff/annotations_edit_scope.jsonl
+```
+
 ## Limits, stated plainly
 
 **No error here has been verified by a physicist.** Every card ships
